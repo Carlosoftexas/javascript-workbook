@@ -24,24 +24,75 @@ function printBoard() {
 }
 
 function horizontalWin() {
-  // Your code here
+	for (var i=0; i<3; i++) {
+		var count = 0;
+		for (var k=0; k<3; k++) {
+			if (board[i][k]==playerTurn) {
+				count++;
+			}
+		}
+		if (count==3) {
+			return true;
+		}
+	}
+	return false;
 }
 
 function verticalWin() {
-  // Your code here
+	for (var i=0; i<3; i++) {
+		var count = 0;
+		for (var k=0; k<3; k++) {
+			if (board[k][i]==playerTurn) {
+				count++;
+			}
+		}
+		if (count==3) {
+			return true;
+		}
+	}
+	return false;
 }
 
 function diagonalWin() {
-  // Your code here
+	var count1 = 0;
+	var count2 = 0;
+	for (var i=0; i<3; i++) {
+		if (board[i][i]==playerTurn) {
+			count1++;
+		}
+		if (board[i][2-i]==playerTurn) {
+			count2++;
+		}
+	}
+	if (count1==3 || count2==3) {
+		return true;
+	}
+	return false;
 }
 
 function checkForWin() {
-  // Your code here
+	if (horizontalWin()===true) {
+		return true;
+	}
+	if (verticalWin()===true) {
+		return true;
+	}
+	if (diagonalWin()===true) {
+		return true;
+	}
+	return false;
 }
 
 function ticTacToe(row, column) {
-  // Your code here
+	board[row][column] = playerTurn;
+	if (checkForWin()===true) {
+		console.log('Player ' + playerTurn + ' wins');
+		return 'Player ' + playerTurn + ' wins';
+	} else {
+		playerTurn = (playerTurn == 'X') ? 'O' :'X';
+	}
 }
+
 
 function getPrompt() {
   printBoard();
