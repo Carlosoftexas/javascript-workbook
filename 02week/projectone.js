@@ -61,10 +61,21 @@ carsInReverse.push('');
 
 // pop
 // Use the pop method to remove and console.log the last item in the array carsInReverse.
-carsInReverse.pop(''); 
+carsInReverse.pop('');
+console.log(3);
 // shift
 // Use the shift method to remove and console.log the first item in the array carsInReverse.
+carsInReverse.shift();
+console.log('Honda')
 // unshift
 // Use the unshift method to add a new type of car to the array carsInReverse.
+carsInReverse.unshift('audi');
+
+
 // forEach
 // Create an array called numbers with the following items: 23, 45, 0, 2 Write code that will add 2 to each item in the array numbers
+var numbers = [23, 45, 0, 2];
+numbers.forEach(function(addingTwo){
+  addingTwo += 2;
+  console.log(addingTwo)
+});

@@ -13,6 +13,11 @@ let stacks = {
   c: []
 };
 
+// global vars to store the current start and end stack
+// as the other functions don't have parameters
+let currentStartStack = [];
+let currentEndStack = [];
+
 function printStacks() {
   console.log("a: " + stacks.a);
   console.log("b: " + stacks.b);
@@ -20,23 +25,46 @@ function printStacks() {
 }
 
 function movePiece() {
-  // Your code here
-
+  let mover = currentStartStack.splice(currentStartStack.length-1, 1);
+  currentEndStack.push(mover[0]);
 }
 
 function isLegal() {
-  // Your code here
-
+	// for the tests we will receive parameters here
+	if (arguments.length===2) {
+	  // init the global vars from function parameters
+	  currentStartStack = stacks[arguments[0]];
+	  currentEndStack = stacks[arguments[1]];
+	}
+  if (currentStartStack.length===0) {
+    return false;
+  }
+  if (currentEndStack.length===0) {
+    return true;
+  }
+  if (currentStartStack[currentStartStack.length-1] > currentEndStack[currentEndStack.length-1]) {
+    return false;
+  }
+  return true;
 }
 
 function checkForWin() {
-  // Your code here
-
+  if (stacks.a.length===0 && (stacks.b.length===4 || stacks.c.length===4)) {
+    return true;
+  }
+  return false;
 }
 
 function towersOfHanoi(startStack, endStack) {
-  // Your code here
-
+  currentStartStack = stacks[startStack];
+  currentEndStack = stacks[endStack];
+  if (isLegal()) {
+    movePiece();
+    if (checkForWin()) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function getPrompt() {
@@ -61,7 +89,8 @@ if (typeof describe === 'function') {
   });
 
   describe('#isLegal()', () => {
-    it('should not allow an illegal move', () => {
+
+	it('should not allow an illegal move', () => {
       stacks = {
         a: [4, 3, 2],
         b: [1],
@@ -69,6 +98,7 @@ if (typeof describe === 'function') {
       };
       assert.equal(isLegal('a', 'b'), false);
     });
+
     it('should allow a legal move', () => {
       stacks = {
         a: [4, 3, 2, 1],
@@ -78,6 +108,7 @@ if (typeof describe === 'function') {
       assert.equal(isLegal('a', 'c'), true);
     });
   });
+
   describe('#checkForWin()', () => {
     it('should detect a win', () => {
       stacks = { a: [], b: [4, 3, 2, 1], c: [] };
@@ -86,6 +117,7 @@ if (typeof describe === 'function') {
       assert.equal(checkForWin(), false);
     });
   });
+
 } else {
 
   getPrompt();
