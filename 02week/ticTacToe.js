@@ -89,7 +89,7 @@ function ticTacToe(row, column) {
 		console.log('Player ' + playerTurn + ' wins');
 		return 'Player ' + playerTurn + ' wins';
 	} else {
-		playerTurn = (playerTurn == 'X') ? 'O' :'X';
+		playerTurn = (playerTurn == 'X') ? 'O' :'X'; // switch players
 	}
 }
 
