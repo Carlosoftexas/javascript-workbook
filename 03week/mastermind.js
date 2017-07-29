@@ -19,67 +19,62 @@ function printBoard() {
 }
 
 function generateSolution() {
-  // 4 character in the string
+
+  // 4 characters in the string
   for (let i = 0; i < 4; i++) {
-    // xreates random string
+    // creates random index
     const randomIndex = getRandomInt(0, letters.length);
-    // secret string
+    // add letter at random index to secret string
     solution += letters[randomIndex];
   }
-  console.log('solution', solution);
+console.log(solution); 
 }
 
-// random number generator 0 ... 7 including
+// random number generator 0 ... 7 including -> letters.length - 1
 function getRandomInt(min, max) {
+//	0.99 * 8 ~ 8  -> 7
+//	0.0001 * 8 -> 0
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function generateHint() {
-    let currentGuess = arguments[0];
-		let numGreens = 0; // contained and correct position
-		let numYellows = 0; // just contained
-		let checked = [];
-		let doublicates = {};
-		// init
-		for (let i=0; i<4; i++){
-			checked[i] = false;
-		};
-		// calculate greens
-		for (let i=0; i<4; i++){
-		  let currentChar = solution.charAt(i);
-		  //
-		  if ( true === (currentChar in doublicates) ) {
-		    doublicates[currentChar]++;
-		  } else {
-		    doublicates[currentChar] = 1;
-		  }
-			if (currentGuess.charAt(i) === solution.charAt(i) && checked[i] === false){
-				checked[i] = true;
-				numGreens++;
-			}
-		}
-		console.log('doublicates', doublicates);
-		// calculate yellows
-		for(let i=0; i<4; i++){
-			for (let j=0; j<4; j++){
-				if (currentGuess.charAt(i) === solution.charAt(j) && checked[i] === false){
-					checked[i] = true;
-					numYellows++;
-				}
-			}
-		}
+    // current guess from user
+	let currentGuess = arguments[0];
+	let positionsChecked = []; // to avoid adding duplicates to the results
 
-		let dubString = '';
-		for (let e in doublicates) {
-		  if (doublicates[e]>1) {
-		    dubString += 1+'-';
-		  }
+	let numHits = 0; // correct position
+	let numContained = 0; // just contained - wrong position
+
+	// init
+	for (let i=0; i<4; i++){
+		positionsChecked[i] = false; // set all positions in the secret string to unchecked
+	}
+ 	// 0 1 2 3
+	// 'abcd' - 1-1
+	// 'aabb'
+	// calculate hits
+	for (let i=0; i<4; i++){ // for every character in the current guess and solution
+		if (currentGuess.charAt(i) === solution.charAt(i)) { //
+			positionsChecked[i] = true; // set position to checked to not check again
+			numHits++; // increase greens - contained at correct position
 		}
-		if (dubString.length>0) {
-		  dubString = dubString.substring(0, dubString.lastIndexOf('-'));
-		  return dubString;
+	}
+
+	// calculate only contained
+ 	// 0 1 2 3
+	// 'abcd' - 1-1
+	// 'aabb'
+	for(let i=0; i<4; i++){ // for every character in the current guess a b c d
+		for (let j=0; j<4; j++){ // for every character in the solution
+			if (currentGuess.charAt(i) === solution.charAt(j) // if there is a match
+				&& positionsChecked[j] === false // and we haven't checked the solution's character yet
+			){
+				positionsChecked[j] = true; // set position to checked to not check again
+				numContained++; // increae yellows - contained but wrong position
+			}
 		}
-		return numGreens+'-'+numYellows;
+	}
+	return numHits+'-'+numContained;
 }
 
 function mastermind(guess) {
@@ -89,13 +84,10 @@ function mastermind(guess) {
   if (guess===solution) {
     return 'You guessed it!';
   }
-
-  // your code here
 }
 
 
 function getPrompt() {
-  // guess from user
   rl.question('guess: ', (guess) => {
     mastermind(guess);
     printBoard();
