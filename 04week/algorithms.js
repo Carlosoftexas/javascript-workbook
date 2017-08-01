@@ -15,15 +15,95 @@ for (let i = 0; i < 1000; i++) {
 }
 
 function bubbleSort(arr) {
-  // Your code here
+  while (true) { // infinite
+    let found = false;
+    for (var i = 0; i < arr.length - 1; i++) { // 0 ... 7 - one less because we maybe want to switch position
+      if (arr[i] > arr[i + 1]) { // if current is greater than next
+        found = true; // indicate we're not finished yet
+        let item = arr[i]; // save current item in variable
+        arr[i] = arr[i + 1]; // put the next element to the current position
+        arr[i + 1] = item; // put the next position to the value of the saved one
+      }
+    }
+    if (found === false) { // all sorted
+      break; // leave while
+    }
+  }
+  return arr;
 }
 
 function mergeSort(arr) {
-  // Your code here
+  if (arr.length <= 1) { // nothing to sort or splice
+    return arr; // return input
+  }
+
+  let cutPosition = Math.floor(arr.length / 2); // get cut Position index
+
+  let leftSideSublist = arr.slice(0, cutPosition); // left side of cut
+
+  let rightSideSublist = arr.slice(cutPosition, arr.length); // right side including cut
+
+
+
+  return orderAndMerge(mergeSort(leftSideSublist), mergeSort(rightSideSublist)); // cut, order and merge recursively
 }
 
-function binarySearch(arr, item) {
-  // Your code here
+function orderAndMerge(leftSideSublist, rightSideSublist) {
+
+  let stack = []; // merged sublist // 5
+
+  while (leftSideSublist.length > 0 && rightSideSublist.length > 0) {
+    if (leftSideSublist[0] <= rightSideSublist[0]) { // compare frist elem left and right
+      stack.push(leftSideSublist.shift()); // if left element is smaller take first one off
+      // and push as next into the stack
+    } else {
+      stack.push(rightSideSublist.shift()); // otherwise push the first right one to the stack
+    }
+  }
+
+  while (leftSideSublist.length > 0) {
+    // if there are remaining elements because length of sublists wasn't equal
+    stack.push(leftSideSublist.shift()); // add to list
+  }
+
+  while (rightSideSublist.length > 0) { // same for the right list
+    stack.push(rightSideSublist.shift());
+  }
+
+
+  return stack; // ordered and merged sublist
+}
+
+
+
+function binarySearch(sourceArray, valueToFind) {
+
+  let startPosition = 0;
+  let endPosition = sourceArray.length - 1;
+  let cutPosition = Math.floor((endPosition + startPosition) / 2);
+
+  while (true) { // we haven't reached end of part
+    if (sourceArray[cutPosition] == valueToFind // value found
+      ||
+      startPosition >= endPosition) { // or end of subsequence
+      break; // leave while
+    }
+    // if in left list and smaller -> move end pos one before cut
+    if (valueToFind < sourceArray[cutPosition]) {
+      endPosition = cutPosition - 1;
+      // if in right list -> move start pos 1 further right
+    } else if (valueToFind > sourceArray[cutPosition]) {
+      startPosition = cutPosition + 1;
+    }
+    // calculate cutPosition from new position values
+    cutPosition = Math.floor((endPosition + startPosition) / 2);
+  }
+  // when we found a value or start position has reached end
+  // we should have a valid result
+  if (sourceArray[cutPosition] == valueToFind) {
+    return cutPosition;
+  } // otherwise ...
+  return false;
 }
 
 // Tests

@@ -2,25 +2,93 @@
 
 const assert = require('assert');
 
-function forEach(arr, callback) {
-  // Your code here
+/**
+ * execute function for each item in arr
+ * with item as parameter
+ *
+ * @param {*} arr ['bananas', 'apples', 'oranges'] [3, 15, 5]
+ * @param {*} func 1, s true function() { //}
+ */
+function forEach(arr, func) {
+	for (let i=0; i<arr.length; i++) {
+		func();
+	}
 }
 
-function map(arr, callback) {
-  // Your code here
+/**
+ * execute function for each item in arr
+ * with item as parameter.
+ * change parameter inside function and
+ * return array of modified items
+ *
+ * @param {*} arr - [6, 47, 1, 3, 101, 5, 53, 43, 14, 33, 8, 7];
+ * @param {*} func
+ */
+function map(arr, func) {
+	let res = [];
+	for (let i=0; i<arr.length; i++) {
+	//	arr[i] = func( arr[i] ) ;
+		res.push( func( arr[i] ) );
+	}
+//	return arr;
+	return res;
 }
 
-function filter(arr, callback) {
-  // Your code here
+/**
+ * execute function for each item in arr
+ * with item as parameter and only
+ * add items to the result array where
+ * function's return value is true
+ *
+ * @param {*} arr
+ * @param {*} func
+ */
+function filter(arr, func) {
+	let res = [];
+	for (let i=0; i<arr.length; i++) {
+		if (true===func(arr[i])) {
+			res.push(arr[i]);
+		}
+	}
+	return res;
 }
 
-function some(arr, callback) {
-  // Your code here
+/**
+ * execute function for each item in arr
+ * with item as parameter and return true
+ * as soon the function's return value is
+ * true
+ *
+ * @param {*} arr
+ * @param {*} func
+ */
+function some(arr, func) {
+	for (let i=0; i<arr.length; i++) {
+		if (func(arr[i])) {
+			return true;
+		}
+	}
+	return false;
+}
+/**
+ * execute function for each item in arr
+ * with item as parameter and only
+ * return true if
+ * function's return value is always true
+ * with every item in arr
+ *
+ * @param {*} arr
+ * @param {*} func
+ */
+function every(arr, func) {
+	for (let i=0; i<arr.length; i++) {
+		if (false===func(arr[i])) {
+			return false;
+		}
+	}
+	return true;
 }
 
-function every(arr, callback) {
-  // Your code here
-}
 
 if (typeof describe === 'function') {
 
