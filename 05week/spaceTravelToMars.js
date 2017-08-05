@@ -9,9 +9,35 @@ let jobTypes = {
   programmer: 'Any Ship!'
 };
 
+function Ship( name, type, ability) {
+  this.name = name;
+  this.type = type;
+  this.ability = ability;
+  this.crew = [];
+  this.missionStatement = function() {
+    if (this.crew.length<1) {
+      return "Can't perform a mission yet."
+    } else {
+      return this.ability;
+    }
+  }
+}
+
+function CrewMember( name, job, specialSkill, ship) {
+  this.name = name;
+  this.job = job;
+  this.specialSkill = specialSkill;
+  this.ship = (ship) ? ship : null; // short for if / else trinary operator
+  this.enterShip = function(s) { // ship
+    this.ship = s; // save ship in crew member's ship property
+    s.crew.push(this);  // save crewmember in ship's crew array
+  }
+}
+
 // Your code here
 
 //tests
+
 if (typeof describe === 'function'){
   describe('CrewMember', function(){
     it('should have a name, a job, a specialSkill and ship upon instantiation', function(){

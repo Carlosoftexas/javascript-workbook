@@ -9,6 +9,7 @@ const assert = require('assert');
  * @param {*} arr ['bananas', 'apples', 'oranges'] [3, 15, 5]
  * @param {*} func 1, s true function() { //}
  */
+ 
 function forEach(arr, func) {
 	for (let i=0; i<arr.length; i++) {
 		func();
