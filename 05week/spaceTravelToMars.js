@@ -9,6 +9,7 @@ let jobTypes = {
   programmer: 'Any Ship!'
 };
 
+
 function Ship( name, type, ability) {
   this.name = name;
   this.type = type;
@@ -34,7 +35,6 @@ function CrewMember( name, job, specialSkill, ship) {
   }
 }
 
-// Your code here
 
 //tests
 

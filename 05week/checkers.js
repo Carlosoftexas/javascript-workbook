@@ -67,7 +67,97 @@ function Game() {
     this.createCheckers();
   // Your code here
   };
-  this
+  // source = '50', target = '41' -> [5, 0] [4, 1] -> map
+  this.moveChecker = function(source, target) {
+      let sourceCoords = source.split('').map(function(val) {
+        return parseInt(val);
+      });
+      let targetCoords = target.split('').map(function(val) {
+        return parseInt(val);
+      });
+      console.log('sourceCoords', sourceCoords);
+      console.log('targetCoords', targetCoords);
+      let targetChecker = [];
+
+      let foundData = this.findCheckerByChords(sourceCoords[0], sourceCoords[1]);
+      console.log('foundData ', foundData );
+      let sourceIndex = foundData[0];
+      let sourceChecker = foundData[1];
+      if (sourceIndex>-1) {
+        this.board.checkers[sourceIndex].startX = sourceCoords[1];
+        this.board.checkers[sourceIndex].startY = sourceCoords[0];
+        this.board.grid[sourceCoords[0]][sourceCoords[1]] = null;
+        this.board.grid[targetCoords[0]][targetCoords[1]] = { 'symbol': 'x'};
+      }
+      let yDif = sourceCoords[0] - targetCoords[0];
+      let yY = [];
+      for (let y = 1; y<=Math.abs(yDif); y++) {
+        yY.push(sourceCoords[0]+y); // y-values of positions on the way
+      }
+      let xDif = sourceCoords[1] - targetCoords[1];
+      let xX = [];
+      for (let x = 1; x<=Math.abs(xDif); x++) {
+        xX.push(sourceCoords[1]+x); // y-values of positions on the way
+      }
+      for (let k=0; k<yY.length;k++) {
+        let elem = this.findCheckerByChords(yY[k], xX[k]);
+        if (elem[0]>-1 && k>=1) {
+           this.board.checkers.splice(elem[0], 1);
+        }
+      }
+      console.log('y:', yY, 'x:', xX);
+
+            console.log('sourceChecker', sourceChecker);
+            console.log('targetChecker', targetChecker);
+
+  };
+
+/*
+1) Game.moveChecker() should be able to jump over and kill another checker:
+   AssertionError: null == true
+    at Context.it (checkers.js:229:1)
+
+
+ 1) Game.moveChecker() should move a checker:
+    ReferenceError: i is not defined
+     at Game.moveChecker (checkers.js:101:33)
+     at Context.<anonymous> (checkers.js:200:6)
+
+ 2) Game.moveChecker() should be able to jump over and kill another checker:
+    ReferenceError: i is not defined
+     at Game.moveChecker (checkers.js:101:33)
+     at Context.it (checkers.js:208:6)
+
+
+
+
+1) Game.moveChecker() should move a checker:
+   ReferenceError: sourceCoords is not defined
+    at Game.findCheckerByChords (checkers.js:118:29)
+    at Game.moveChecker (checkers.js:82:28)
+    at Context.<anonymous> (checkers.js:184:6)
+
+2) Game.moveChecker() should be able to jump over and kill another checker:
+   ReferenceError: sourceCoords is not defined
+    at Game.findCheckerByChords (checkers.js:118:29)
+    at Game.moveChecker (checkers.js:82:28)
+    at Context.it (checkers.js:192:6)
+
+*/
+  this.findCheckerByChords = function (y, x) {
+    let sourceChecker = {};
+    let sourceIndex = -1;
+      for (let i=0; i<this.board.checkers.length; i++) {
+        let checker = this.board.checkers[i];
+        if (checker.startY==y
+                    && checker.startX==x ) {
+                      sourceChecker = checker;
+                      sourceIndex = i;
+                      break;
+                    }
+      }
+    return [sourceIndex, sourceChecker];
+  };
   this.createCheckers = function() {
     // black ones start left top 0,1
     let trigger = 1;
