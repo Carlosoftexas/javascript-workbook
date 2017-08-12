@@ -61,6 +61,7 @@ function Board() {
 function Game() {
 
   this.board = new Board();
+  this.player = {'symbol' : 'x'}; // switch -> x | o
 
   this.start = function() {
     this.board.createGrid();
@@ -77,81 +78,33 @@ function Game() {
       });
       console.log('sourceCoords', sourceCoords);
       console.log('targetCoords', targetCoords);
-      let targetChecker = [];
 
-      let foundData = this.findCheckerByChords(sourceCoords[0], sourceCoords[1]);
-      console.log('foundData ', foundData );
-      let sourceIndex = foundData[0];
-      let sourceChecker = foundData[1];
-      if (sourceIndex>-1) {
-        this.board.checkers[sourceIndex].startX = sourceCoords[1];
-        this.board.checkers[sourceIndex].startY = sourceCoords[0];
-        this.board.grid[sourceCoords[0]][sourceCoords[1]] = null;
-        this.board.grid[targetCoords[0]][targetCoords[1]] = { 'symbol': 'x'};
+      let targetChecker = this.findCheckerByChords(sourceCoords);
+      this.board.grid[sourceCoords[0]][sourceCoords[1]].symbol = null;
+      this.board.grid[targetCoords[0]][targetCoords[1]] = { 'symbol': this.player.symbol};
+      this.player.symbol = (this.player.symbol=='x') ? 'o' : 'x';
+      this.board.checkers[targetChecker[0]].startX = targetCoords[1];
+      this.board.checkers[targetChecker[0]].startY = targetCoords[0];
+      let gap = [0,0];
+      gap[0] = Math.floor(((targetCoords[0]-sourceCoords[0])/2));
+      gap[1] = Math.floor(((targetCoords[1]-sourceCoords[1])/2));
+      if (Math.abs(gap[0])>0 && Math.abs(gap[1])>0) {
+          gap[0] += sourceCoords[0];
+          gap[1] += sourceCoords[1];
+         let deleteChecker = this.findCheckerByChords(gap);
+         this.board.checkers.splice(deleteChecker[0], 1);
+         this.board.grid[deleteChecker[1].startY][deleteChecker[1].startX] = null;
       }
-      let yDif = sourceCoords[0] - targetCoords[0];
-      let yY = [];
-      for (let y = 1; y<=Math.abs(yDif); y++) {
-        yY.push(sourceCoords[0]+y); // y-values of positions on the way
-      }
-      let xDif = sourceCoords[1] - targetCoords[1];
-      let xX = [];
-      for (let x = 1; x<=Math.abs(xDif); x++) {
-        xX.push(sourceCoords[1]+x); // y-values of positions on the way
-      }
-      for (let k=0; k<yY.length;k++) {
-        let elem = this.findCheckerByChords(yY[k], xX[k]);
-        if (elem[0]>-1 && k>=1) {
-           this.board.checkers.splice(elem[0], 1);
-        }
-      }
-      console.log('y:', yY, 'x:', xX);
-
-            console.log('sourceChecker', sourceChecker);
-            console.log('targetChecker', targetChecker);
 
   };
 
-/*
-1) Game.moveChecker() should be able to jump over and kill another checker:
-   AssertionError: null == true
-    at Context.it (checkers.js:229:1)
-
-
- 1) Game.moveChecker() should move a checker:
-    ReferenceError: i is not defined
-     at Game.moveChecker (checkers.js:101:33)
-     at Context.<anonymous> (checkers.js:200:6)
-
- 2) Game.moveChecker() should be able to jump over and kill another checker:
-    ReferenceError: i is not defined
-     at Game.moveChecker (checkers.js:101:33)
-     at Context.it (checkers.js:208:6)
-
-
-
-
-1) Game.moveChecker() should move a checker:
-   ReferenceError: sourceCoords is not defined
-    at Game.findCheckerByChords (checkers.js:118:29)
-    at Game.moveChecker (checkers.js:82:28)
-    at Context.<anonymous> (checkers.js:184:6)
-
-2) Game.moveChecker() should be able to jump over and kill another checker:
-   ReferenceError: sourceCoords is not defined
-    at Game.findCheckerByChords (checkers.js:118:29)
-    at Game.moveChecker (checkers.js:82:28)
-    at Context.it (checkers.js:192:6)
-
-*/
-  this.findCheckerByChords = function (y, x) {
+  this.findCheckerByChords = function (source) {
     let sourceChecker = {};
     let sourceIndex = -1;
       for (let i=0; i<this.board.checkers.length; i++) {
-        let checker = this.board.checkers[i];
-        if (checker.startY==y
-                    && checker.startX==x ) {
-                      sourceChecker = checker;
+        if (this.board.checkers[i].startY==source[0]
+                    && this.board.checkers[i].startX==source[1] ) {
+                      sourceChecker = this.board.checkers[i];
                       sourceIndex = i;
                       break;
                     }
@@ -172,7 +125,6 @@ function Game() {
     trigger = 0;
     for (let y=5; y<8; y++) { // row index
       for (let x=trigger; x<=7; x += 2) { // col index
-        console.log(y, [y,x]);
         this.board.checkers.push(new Checker('x', x, y));
         this.board.grid[y][x] = {symbol : 'x'};
       }
