@@ -1,0 +1,14 @@
+table td {
+  width: 40px;
+  height: 30px;
+}
+table td.green {
+  background: green;
+  color: #fff;
+}
+table tr.hide {
+  background: #000;
+}
+table tr.show {
+  background: orange;
+}

@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
         moved = false;
       }
     });
-  }); // data-block selector
+  }); 
 
-    }); // data-stack selector
-  } // assignevents
+    });
+  }
 
     /*
   document.querySelectorAll('[data-block]').forEach((div, index) => { // div -> one of the data-block elem
