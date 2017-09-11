@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html>
+  
+<head>
+  <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+  <script src="https://npmcdn.com/react-router@3.0.2/umd/ReactRouter.min.js"></script>
+
+  <style>
+body {
+  background-color:  #4286f4;
+  padding: 20px;
+  margin: 0;
+}
+h1, h2, p, ul, li {
+  font-family: Helvetica, Arial, sans-serif;
+}
+ul.header li {
+  display: inline;
+  list-style-type: none;
+  margin: 0;
+}
+ul.header {
+  background-color: #111;
+  padding: 0;
+}
+ul.header li a {
+  color: #FFF;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 20px;
+  display: inline-block;
+}
+.content {
+  background-color: #FFF;
+  padding: 20px;
+}
+.content h2 {
+  padding: 0;
+  margin: 0;
+}
+.content li {
+  margin-bottom: 10px;
+}
+
+.active {
+  background-color: #1d2577;
+}
+
+
+  
+  </style>
+</head>
+  
+<body>
+  
+  <div id="container">
+  
+  </div>
+  
+  <script type="text/babel">
+	var { Router,
+	Route,
+	IndexRoute,
+	IndexLink,
+	hashHistory,
+	Link } = ReactRouter;
+
+    var destination = document.querySelector("#container")
+    var App = React.createClass({
+      render: function() {
+        return (
+          <div>
+            <h1>CheckPoint 3</h1>
+            <ul className="header">
+            <li><Link activeClassName="active" to="/">Home</Link></li>
+            <li><Link activeClassName="active" to="/stuff">Stuff</Link></li>
+            <li><Link activeClassName="active" to="/contact">Contact</Link></li>
+            <li><Link activeClassName="active" to="/search">Search</Link></li>
+            </ul>
+            <div className="content">
+               {this.props.children}
+            </div>
+          </div>
+        )
+      }
+    });
+    var Home = React.createClass({
+      render: function() {
+          return (
+            <div>
+              <h2>HELLO</h2>
+              <p>Welcome to Checkpoint tres! </p>
+
+              <p>Done</p>
+            </div>
+          );
+        }
+    });
+
+    var Contact = React.createClass({
+  render: function() {
+      return (
+        <div>
+          <h2>GOT QUESTIONS?</h2>
+          <p>The easiest thing to do is to check out
+          our <a href="https://austincodingacademy.com/"> courses</a>.
+          </p>
+        </div>
+      );
+    }
+});
+
+var Stuff = React.createClass({
+  render: function() {
+      return (
+        <div>
+          <h2>STUFF</h2>
+          <p>More Stuff:</p>
+          <ol>
+            <li>Html/css</li>
+            <li>javascript</li>
+            <li>react.js</li>
+            <li>bootstrap</li>
+            <li>and much more! </li>
+          </ol>
+        </div>
+      );
+    }
+});
+
+var Fetch = React.createClass ({
+
+	getInitialState: function() {
+		return {
+			searchKey: '',
+			list: []
+		};
+	},
+
+	handleChange: function(e){
+		this.setState({searchKey:e.target.value});
+		fetch('https://itunes.apple.com/search?term=' + e.target.value)
+        .then( (response) => {
+            return response.json()
+        })
+        .then( (json) => {
+            this.setState({
+              list: json.results.filter(item => {
+				return item.artistName.trim().toLowerCase() == this.state.searchKey;
+			  })
+            })
+        });
+	},
+
+
+  render: function() {
+
+	var searchString = this.state.searchKey.trim().toLowerCase();
+	return (
+      <div>
+        <h2>Type Jack Johnson in search bar... </h2>
+      Search:<br/>
+       <input type="text"value={this.state.searchKey} onChange={this.handleChange} /><br/>
+	   <hr/>
+		<ul style={{width:'50%'}}>
+		{this.state.list.map(function(item, i){
+				{item.earned_date}
+			return <li key={i}>{item.artistName} - <a href={item.artworkUrl60}>{item.artworkUrl60}</a><br/>
+				</li>;
+				}
+			)}
+		</ul>
+    </div>
+    );
+  }
+});
+
+
+ReactDOM.render(
+<Router history={hashHistory}>
+  <Route path="/" component={App}>
+    <IndexRoute component={Home}/>
+    <Route path="stuff" component={Stuff} />
+    <Route path="contact" component={Contact} />
+    <Route path="search" component={Fetch} />
+  </Route>
+</Router>,
+destination
+);
+  </script>
+</body>
+  
+</html>
